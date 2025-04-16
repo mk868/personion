@@ -1,6 +1,7 @@
 package eu.softpol.app.personio;
 
-import static eu.softpol.app.personio.DurationUtil.formatDuration;
+import static eu.softpol.app.personio.DurationUtil.durationToExcel;
+import static eu.softpol.app.personio.DurationUtil.durationToString;
 import static eu.softpol.app.personio.page.TimeTrackingPage.DAY_DATE_ELEMENT;
 import static eu.softpol.app.personio.page.TimeTrackingPage.DAY_TRACKED_VS_TARGET_ELEMENT;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfElementsToBeMoreThan;
@@ -127,7 +128,7 @@ public class Main {
                 .map(DurationUtil::parseDuration)
                 .reduce(Duration.ZERO, Duration::plus);
 
-            summaryOutput.write(2, "%s: %s".formatted(jiraKey, formatDuration(timePerKey)));
+            summaryOutput.write(2, "%s: %s  [ %s ]".formatted(jiraKey, durationToString(timePerKey), durationToExcel(timePerKey)));
           }
         }
       }
