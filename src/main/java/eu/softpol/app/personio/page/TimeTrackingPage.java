@@ -13,6 +13,8 @@ public class TimeTrackingPage {
 
   public static final By ENTRY_ELEMENT = By.cssSelector(
       "[class^='TimePeriodRow-module__timePeriodRow__']");
+  public static final By ENTRY_TYPE_ELEMENT = By.cssSelector(
+      "div[class*='TimePeriodRow-module__periodTypePicker_'] > button > span");
   public static final By ENTRY_TIME_ELEMENT = By.cssSelector(
       "[class^='TimePeriodsInput-module__time__']");
   public static final By ENTRY_PROJECT_ELEMENT = By.cssSelector(

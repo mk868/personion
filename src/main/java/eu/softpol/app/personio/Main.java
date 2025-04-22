@@ -93,6 +93,12 @@ public class Main {
         var entries = driver.findElements(TimeTrackingPage.ENTRY_ELEMENT);
         log.info("Found {} entries", entries.size());
         for (var entry : entries) {
+          var type = entry.findElement(TimeTrackingPage.ENTRY_TYPE_ELEMENT)
+              .getDomAttribute("value");
+          if (!type.equals("work")) {
+            log.info("Skipping non-work entry");
+            continue;
+          }
           var time = entry.findElement(TimeTrackingPage.ENTRY_TIME_ELEMENT).getText();
           if (time.equals("0h")) {
             log.info("Skipping empty entry");
