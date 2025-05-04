@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -121,20 +122,33 @@ public class Main {
           var projectName = kv.getKey();
           summaryOutput.write(1, projectName);
 
-          var issueToEntries = kv.getValue().stream()
-              .collect(Collectors.groupingBy(e -> Arrays.stream(e.comment().split(";"))
-                  .map(String::trim)
-                  .filter(JiraUtil::isJiraKey)
-                  .findFirst()
-                  .orElse("NONE")));
-          for (var kv2 : issueToEntries.entrySet()) {
-            var jiraKey = kv2.getKey();
+          var taskToEntries = kv.getValue().stream()
+              .collect(Collectors.groupingBy(e ->
+                  Optional.of(e.comment())
+                      .map(c -> {
+                        if (c.contains(";")) {
+                          return c.substring(0, c.indexOf(";")).trim();
+                        }
+                        return c;
+                      })));
+          for (var kv2 : taskToEntries.entrySet()) {
+            var task = kv2.getKey();
             var timePerKey = kv2.getValue().stream()
                 .map(Entry::time)
                 .map(DurationUtil::parseDuration)
                 .reduce(Duration.ZERO, Duration::plus);
+            var mergedCommentsForJira = kv2.getValue().stream()
+                .map(Entry::comment)
+                .filter(c -> c.contains(";"))
+                .map(c -> c.substring(c.indexOf(";") + 1).trim())
+                .collect(Collectors.joining(","));
 
-            summaryOutput.write(2, "%s: %s  [ %s ]".formatted(jiraKey, durationToString(timePerKey), durationToExcel(timePerKey)));
+            summaryOutput.write(2, "%s: %s  [ %s ]   %s".formatted(
+                task,
+                durationToString(timePerKey),
+                durationToExcel(timePerKey),
+                mergedCommentsForJira.isEmpty() ? "" : "\"" + mergedCommentsForJira + "\""
+            ));
           }
         }
       }
