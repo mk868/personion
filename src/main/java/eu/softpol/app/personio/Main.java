@@ -123,14 +123,13 @@ public class Main {
           summaryOutput.write(1, projectName);
 
           var taskToEntries = kv.getValue().stream()
-              .collect(Collectors.groupingBy(e ->
-                  Optional.of(e.comment())
-                      .map(c -> {
-                        if (c.contains(";")) {
-                          return c.substring(0, c.indexOf(";")).trim();
-                        }
-                        return c;
-                      })));
+              .collect(Collectors.groupingBy(e -> {
+                var c = e.comment();
+                if (c.contains(";")) {
+                  c = c.substring(0, c.indexOf(";"));
+                }
+                return c.trim();
+              }));
           for (var kv2 : taskToEntries.entrySet()) {
             var task = kv2.getKey();
             var timePerKey = kv2.getValue().stream()
@@ -140,8 +139,10 @@ public class Main {
             var mergedCommentsForJira = kv2.getValue().stream()
                 .map(Entry::comment)
                 .filter(c -> c.contains(";"))
-                .map(c -> c.substring(c.indexOf(";") + 1).trim())
-                .collect(Collectors.joining(","));
+                .map(c -> c.substring(c.indexOf(";") + 1))
+                .map(String::trim)
+                .distinct()
+                .collect(Collectors.joining(", "));
 
             summaryOutput.write(2, "%s: %s  [ %s ]   %s".formatted(
                 task,
