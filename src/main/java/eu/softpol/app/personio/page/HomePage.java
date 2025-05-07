@@ -4,6 +4,6 @@ import org.openqa.selenium.By;
 
 public class HomePage {
 
-  public static final By ANY_DASHBOARD_ELEMENT = By.cssSelector("[class^='Dashboard-module__dashboard']");
+  public static final By ANY_DASHBOARD_ELEMENT = By.cssSelector("[class*='Dashboard-module__dashboard']");
 
 }
