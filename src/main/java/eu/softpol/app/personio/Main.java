@@ -15,8 +15,6 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -55,9 +53,14 @@ public class Main {
       wait.withTimeout(Duration.ofSeconds(10));
 
       var menuTimeTracking = wait.until(
-          visibilityOfElementLocated(Menu.MENU_ITEM_TIME_TRACKING_ELEMENT));
+          visibilityOfElementLocated(Menu.MENU_ITEM_TIME_OFF_AND_ATTENDANCE));
 
       menuTimeTracking.click();
+
+      var timeTrackingTab = wait.until(
+          visibilityOfElementLocated(TimeTrackingPage.ATTENDANCE_TAB));
+
+      timeTrackingTab.click();
 
       var days = wait.until(numberOfElementsToBeMoreThan(TimeTrackingPage.DAY_HEADER_ELEMENT, 10));
       var noOfDays = days.size();

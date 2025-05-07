@@ -4,6 +4,9 @@ import org.openqa.selenium.By;
 
 public class TimeTrackingPage {
 
+  public static final By ATTENDANCE_TAB = By.cssSelector(
+      "[data-test-id='time-area-navigation-tabs'] a[value*='attendance']");
+
   public static final By DAY_HEADER_ELEMENT = By.cssSelector(
       "[class^='TimecardRow-module__timecard__']");
   public static final By DAY_DATE_ELEMENT = By.cssSelector(
